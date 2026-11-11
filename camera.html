@@ -2,274 +2,671 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#1565c0">
+
+  <!-- Penting untuk kamera HP -->
+  <meta name="viewport"
+        content="width=device-width,
+                 initial-scale=1.0,
+                 maximum-scale=1.0,
+                 user-scalable=no">
+
   <title>Kamera BISAMA</title>
+
   <style>
-    *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;font-family:Arial,sans-serif;background:#f4f7fb;display:flex;justify-content:center;align-items:center;padding:20px}
-    .camera-container{width:100%;max-width:600px;background:#fff;border-radius:18px;padding:20px;box-shadow:0 8px 30px rgba(0,0,0,.12)}
-    .title{text-align:center;margin-bottom:15px}.title h2{margin:0;color:#1565c0}.title p{margin:7px 0 0;color:#666;font-size:14px}
-    .camera-box{position:relative;width:100%;aspect-ratio:4/3;background:#111;border-radius:14px;overflow:hidden}
-    video{width:100%;height:100%;object-fit:cover;display:block}.camera-box canvas{display:none}
-    .status{margin:12px 0;padding:10px;border-radius:8px;background:#eef5ff;color:#145da0;font-size:14px;text-align:center;line-height:1.45}
-    .status.error{background:#fff0f0;color:#c62828}.status.success{background:#eef9f0;color:#2e7d32}.status.warn{background:#fff8e1;color:#8a5a00}
-    .buttons{display:flex;gap:10px;margin-top:15px}button{flex:1;border:0;border-radius:10px;padding:13px 10px;font-size:14px;font-weight:700;cursor:pointer;transition:.15s}button:active{transform:scale(.96)}
-    button:disabled{opacity:.5;cursor:not-allowed}.btn-camera{background:#1565c0;color:#fff}.btn-capture{background:#2196f3;color:#fff}.btn-retake{background:#757575;color:#fff}.btn-use{background:#2e7d32;color:#fff}.btn-open{background:#f59e0b;color:#fff}
-    .hidden{display:none!important}.camera-switch{margin-top:10px;text-align:center}.camera-switch button{flex:none;width:auto;padding:9px 16px;background:#eee;color:#333}
-    .preview{margin-top:15px;border-radius:12px;overflow:hidden;display:none}.preview img{width:100%;display:block}
-    .note{font-size:11px;color:#64748b;text-align:center;margin-top:10px;line-height:1.5}
-    @media(max-width:480px){body{padding:10px}.camera-container{padding:14px}.buttons{flex-direction:column}button{width:100%}}
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .camera-container {
+      width: 100%;
+      max-width: 600px;
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.12);
+    }
+
+    .title {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .title h2 {
+      margin: 0;
+      color: #1565c0;
+    }
+
+    .title p {
+      margin: 7px 0 0;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .camera-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: #111;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    video,
+    canvas {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    canvas {
+      display: none;
+    }
+
+    .status {
+      margin: 12px 0;
+      padding: 10px;
+      border-radius: 8px;
+      background: #eef5ff;
+      color: #145da0;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .status.error {
+      background: #fff0f0;
+      color: #c62828;
+    }
+
+    .status.success {
+      background: #eef9f0;
+      color: #2e7d32;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    button {
+      flex: 1;
+      border: none;
+      border-radius: 10px;
+      padding: 13px 10px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: .15s;
+    }
+
+    button:active {
+      transform: scale(.96);
+    }
+
+    .btn-camera {
+      background: #1565c0;
+      color: white;
+    }
+
+    .btn-capture {
+      background: #2196f3;
+      color: white;
+    }
+
+    .btn-retake {
+      background: #757575;
+      color: white;
+    }
+
+    .btn-use {
+      background: #2e7d32;
+      color: white;
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .camera-switch {
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .camera-switch button {
+      flex: none;
+      width: auto;
+      padding: 9px 16px;
+      background: #eeeeee;
+      color: #333;
+    }
+
+    .preview {
+      margin-top: 15px;
+      border-radius: 12px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .preview img {
+      width: 100%;
+      display: block;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+
+      .camera-container {
+        padding: 14px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
   </style>
 </head>
+
 <body>
+
 <div class="camera-container">
+
   <div class="title">
     <h2>📷 Kamera BISAMA</h2>
     <p>Gunakan kamera untuk mengambil foto presensi</p>
   </div>
 
-  <div id="status" class="status">Menyiapkan kamera...</div>
+  <div id="status" class="status">
+    Menyiapkan kamera...
+  </div>
 
   <div class="camera-box">
-    <video id="video" autoplay playsinline muted></video>
+    <video id="video"
+           autoplay
+           playsinline
+           muted></video>
+
     <canvas id="canvas"></canvas>
   </div>
 
   <div class="camera-switch">
-    <button id="switchCameraBtn" type="button">🔄 Ganti Kamera</button>
+    <button id="switchCameraBtn">
+      🔄 Ganti Kamera
+    </button>
   </div>
 
   <div class="buttons">
-    <button id="startCameraBtn" type="button" class="btn-camera">📷 Aktifkan Kamera</button>
-    <button id="captureBtn" type="button" class="btn-capture" disabled>📸 Ambil Foto</button>
+
+    <button id="startCameraBtn"
+            class="btn-camera">
+      📷 Aktifkan Kamera
+    </button>
+
+    <button id="captureBtn"
+            class="btn-capture"
+            disabled>
+      📸 Ambil Foto
+    </button>
+
   </div>
 
-  <div id="fallbackButtons" class="buttons hidden">
-    <button id="openStandaloneBtn" type="button" class="btn-open">🌐 Buka Kamera di Tab Baru</button>
+  <div id="afterCaptureButtons"
+       class="buttons hidden">
+
+    <button id="retakeBtn"
+            class="btn-retake">
+      🔄 Ulangi Foto
+    </button>
+
+    <button id="usePhotoBtn"
+            class="btn-use">
+      ✅ Gunakan Foto
+    </button>
+
   </div>
 
-  <div id="afterCaptureButtons" class="buttons hidden">
-    <button id="retakeBtn" type="button" class="btn-retake">🔄 Ulangi Foto</button>
-    <button id="usePhotoBtn" type="button" class="btn-use">✅ Gunakan Foto</button>
+  <div id="preview"
+       class="preview">
+
+    <img id="previewImage"
+         alt="Preview foto">
+
   </div>
 
-  <div id="preview" class="preview"><img id="previewImage" alt="Preview foto"></div>
-  <div class="note">Foto hanya dikirim kembali ke halaman BISAMA setelah kamu menekan “Gunakan Foto”.</div>
 </div>
 
 <script>
-'use strict';
 
 let stream = null;
-let currentFacingMode = 'environment';
+let currentFacingMode = "environment";
 let capturedPhoto = null;
 
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const statusBox = document.getElementById('status');
-const startCameraBtn = document.getElementById('startCameraBtn');
-const captureBtn = document.getElementById('captureBtn');
-const switchCameraBtn = document.getElementById('switchCameraBtn');
-const retakeBtn = document.getElementById('retakeBtn');
-const usePhotoBtn = document.getElementById('usePhotoBtn');
-const afterCaptureButtons = document.getElementById('afterCaptureButtons');
-const fallbackButtons = document.getElementById('fallbackButtons');
-const openStandaloneBtn = document.getElementById('openStandaloneBtn');
-const preview = document.getElementById('preview');
-const previewImage = document.getElementById('previewImage');
 
-function setStatus(message, type='') {
+/* =========================================================
+   ELEMENT
+========================================================= */
+
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+
+const statusBox = document.getElementById("status");
+
+const startCameraBtn =
+  document.getElementById("startCameraBtn");
+
+const captureBtn =
+  document.getElementById("captureBtn");
+
+const switchCameraBtn =
+  document.getElementById("switchCameraBtn");
+
+const retakeBtn =
+  document.getElementById("retakeBtn");
+
+const usePhotoBtn =
+  document.getElementById("usePhotoBtn");
+
+const afterCaptureButtons =
+  document.getElementById("afterCaptureButtons");
+
+const preview =
+  document.getElementById("preview");
+
+const previewImage =
+  document.getElementById("previewImage");
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function setStatus(message, type = "") {
+
   statusBox.textContent = message;
-  statusBox.className = 'status' + (type ? ' ' + type : '');
+
+  statusBox.className = "status";
+
+  if (type) {
+    statusBox.classList.add(type);
+  }
 }
 
-function isSupported() {
+
+/* =========================================================
+   CEK KAMERA
+========================================================= */
+
+function checkCameraSupport() {
+
   if (!window.isSecureContext) {
-    setStatus('Kamera membutuhkan HTTPS. Buka melalui GitHub Pages.', 'error');
+
+    setStatus(
+      "Kamera membutuhkan HTTPS. Buka melalui GitHub Pages.",
+      "error"
+    );
+
     return false;
   }
-  if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
-    setStatus('Browser ini tidak mendukung akses kamera.', 'error');
+
+  if (!navigator.mediaDevices ||
+      !navigator.mediaDevices.getUserMedia) {
+
+    setStatus(
+      "Browser ini tidak mendukung akses kamera.",
+      "error"
+    );
+
     return false;
   }
+
   return true;
 }
 
-function stopCamera() {
-  if (stream) {
-    stream.getTracks().forEach(track => {
-      try { track.stop(); } catch (_) {}
-    });
-    stream = null;
-  }
-  video.srcObject = null;
-  captureBtn.disabled = true;
-  startCameraBtn.disabled = false;
-}
 
-function showIframeFallback(message) {
-  setStatus(message + ' Jika izin tetap ditolak, buka kamera pada tab baru.', 'warn');
-  fallbackButtons.classList.remove('hidden');
-}
-
-async function requestCamera(constraints) {
-  try {
-    return await navigator.mediaDevices.getUserMedia(constraints);
-  } catch (firstError) {
-    // Beberapa perangkat/browser menolak constraint lanjutan. Coba kamera default.
-    if (firstError.name === 'OverconstrainedError' || firstError.name === 'NotFoundError') {
-      return await navigator.mediaDevices.getUserMedia({video:true, audio:false});
-    }
-    throw firstError;
-  }
-}
+/* =========================================================
+   START CAMERA
+========================================================= */
 
 async function startCamera() {
-  if (!isSupported()) return;
+
+  if (!checkCameraSupport()) {
+    return;
+  }
 
   stopCamera();
-  fallbackButtons.classList.add('hidden');
-  setStatus('Meminta izin kamera...');
+
+  setStatus("Meminta izin kamera...");
 
   try {
-    stream = await requestCamera({
-      video: {
-        facingMode: { ideal: currentFacingMode },
-        width: { ideal: 1280 },
-        height: { ideal: 720 }
-      },
-      audio: false
-    });
+
+    stream =
+      await navigator.mediaDevices.getUserMedia({
+
+        video: {
+          facingMode: {
+            ideal: currentFacingMode
+          },
+
+          width: {
+            ideal: 1280
+          },
+
+          height: {
+            ideal: 720
+          }
+        },
+
+        audio: false
+
+      });
 
     video.srcObject = stream;
-    await video.play();
-    captureBtn.disabled = false;
-    startCameraBtn.disabled = true;
-    setStatus('Kamera aktif. Silakan ambil foto.', 'success');
-  } catch (error) {
-    console.error('BISAMA camera error:', error);
-    stopCamera();
 
-    let message = 'Kamera tidak dapat digunakan.';
-    if (error.name === 'NotAllowedError') {
-      if (window.top !== window.self) {
-        message = 'Browser menolak akses kamera dari halaman tertanam (iframe).';
-        showIframeFallback(message);
-      } else {
-        message = 'Izin kamera ditolak. Izinkan Kamera pada pengaturan situs/browser lalu coba lagi.';
-      }
-    } else if (error.name === 'NotFoundError') {
-      message = 'Kamera tidak ditemukan pada perangkat.';
-    } else if (error.name === 'NotReadableError') {
-      message = 'Kamera sedang digunakan aplikasi lain. Tutup aplikasi yang memakai kamera lalu coba lagi.';
-    } else if (error.name === 'SecurityError') {
-      message = 'Akses kamera diblokir oleh keamanan browser.';
-    } else if (error.name === 'AbortError') {
-      message = 'Permintaan kamera dihentikan oleh browser/perangkat. Coba lagi.';
+    await video.play();
+
+    captureBtn.disabled = false;
+
+    startCameraBtn.disabled = true;
+
+    setStatus(
+      "Kamera aktif. Silakan ambil foto.",
+      "success"
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+    let message =
+      "Kamera tidak dapat digunakan.";
+
+    if (error.name === "NotAllowedError") {
+
+      message =
+        "Izin kamera ditolak. Izinkan kamera pada browser.";
+
     }
 
-    setStatus(message, 'error');
+    else if (error.name === "NotFoundError") {
+
+      message =
+        "Kamera tidak ditemukan pada perangkat.";
+
+    }
+
+    else if (error.name === "NotReadableError") {
+
+      message =
+        "Kamera sedang digunakan aplikasi lain.";
+
+    }
+
+    else if (error.name === "SecurityError") {
+
+      message =
+        "Akses kamera diblokir oleh keamanan browser.";
+
+    }
+
+    setStatus(message, "error");
+
     captureBtn.disabled = true;
     startCameraBtn.disabled = false;
   }
 }
 
+
+/* =========================================================
+   STOP CAMERA
+========================================================= */
+
+function stopCamera() {
+
+  if (stream) {
+
+    stream.getTracks().forEach(track => {
+      track.stop();
+    });
+
+    stream = null;
+  }
+
+  video.srcObject = null;
+
+  captureBtn.disabled = true;
+
+  startCameraBtn.disabled = false;
+}
+
+
+/* =========================================================
+   AMBIL FOTO
+========================================================= */
+
 function capturePhoto() {
+
   if (!stream) {
-    setStatus('Kamera belum aktif.', 'error');
+
+    setStatus(
+      "Kamera belum aktif.",
+      "error"
+    );
+
     return;
   }
 
   const width = video.videoWidth;
   const height = video.videoHeight;
+
   if (!width || !height) {
-    setStatus('Kamera belum siap. Tunggu sebentar lalu coba lagi.', 'error');
+
+    setStatus(
+      "Kamera belum siap. Coba lagi.",
+      "error"
+    );
+
     return;
   }
 
   canvas.width = width;
   canvas.height = height;
-  const ctx = canvas.getContext('2d', {alpha:false});
-  ctx.drawImage(video, 0, 0, width, height);
 
-  const base64 = canvas.toDataURL('image/jpeg', 0.85);
+  const ctx =
+    canvas.getContext("2d");
+
+  ctx.drawImage(
+    video,
+    0,
+    0,
+    width,
+    height
+  );
+
+  const base64 =
+    canvas.toDataURL(
+      "image/jpeg",
+      0.85
+    );
+
   capturedPhoto = {
-    name: 'presensi-live.jpg',
-    mimeType: 'image/jpeg',
-    base64: base64.split(',')[1]
+    name: "presensi-live.jpg",
+    mimeType: "image/jpeg",
+    base64: base64.split(",")[1]
   };
 
   previewImage.src = base64;
-  preview.style.display = 'block';
-  afterCaptureButtons.classList.remove('hidden');
+
+  preview.style.display = "block";
+
+  afterCaptureButtons.classList.remove("hidden");
+
   captureBtn.disabled = true;
-  setStatus('Foto berhasil diambil. Periksa preview sebelum digunakan.', 'success');
+
+  setStatus(
+    "Foto berhasil diambil. Periksa preview sebelum digunakan.",
+    "success"
+  );
+
   stopCamera();
 }
 
+
+/* =========================================================
+   ULANGI FOTO
+========================================================= */
+
 function retakePhoto() {
+
   capturedPhoto = null;
-  previewImage.removeAttribute('src');
-  preview.style.display = 'none';
-  afterCaptureButtons.classList.add('hidden');
+
+  preview.style.display = "none";
+
+  afterCaptureButtons.classList.add("hidden");
+
   startCamera();
 }
 
+
+/* =========================================================
+   GUNAKAN FOTO
+========================================================= */
+
 function usePhoto() {
+
   if (!capturedPhoto) {
-    setStatus('Belum ada foto yang diambil.', 'error');
+
+    setStatus(
+      "Belum ada foto yang diambil.",
+      "error"
+    );
+
     return;
   }
 
-  const targetOrigin = window.location.origin === 'null' ? '*' : '*';
-  window.parent.postMessage({
-    type: 'BISAMA_CAMERA_PHOTO',
+  /*
+   * Mengirim foto ke halaman BISAMA.
+   *
+   * Parent page akan menerima:
+   *
+   * {
+   *   type: "BISAMA_CAMERA_PHOTO",
+   *   photo: {...}
+   * }
+   */
+
+  const receiverWindow = window.opener || window.parent;
+  const targetOrigin = "https://script.google.com";
+
+  receiverWindow.postMessage({
+    type: "BISAMA_CAMERA_PHOTO",
     photo: capturedPhoto
   }, targetOrigin);
 
-  setStatus('Foto dikirim ke BISAMA.', 'success');
+  setStatus(
+    "Foto dikirim ke BISAMA.",
+    "success"
+  );
 
-  // Jika halaman ini dibuka sebagai tab baru dari BISAMA,
-  // kirim juga ke opener agar alurnya tetap bekerja.
+  // Jika kamera dibuka sebagai tab/jendela baru, tutup kembali
+  // setelah foto berhasil dikirim ke BISAMA.
   if (window.opener && !window.opener.closed) {
-    try {
-      window.opener.postMessage({
-        type: 'BISAMA_CAMERA_PHOTO',
-        photo: capturedPhoto
-      }, '*');
-    } catch (_) {}
+    setTimeout(function () {
+      window.close();
+    }, 500);
   }
 }
 
+
+/* =========================================================
+   GANTI KAMERA
+========================================================= */
+
 async function switchCamera() {
-  currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+
+  if (currentFacingMode === "environment") {
+
+    currentFacingMode = "user";
+
+  } else {
+
+    currentFacingMode = "environment";
+  }
+
   await startCamera();
 }
 
-function openStandaloneCamera() {
-  const url = window.location.href.split('#')[0].split('?')[0] + '?standalone=1';
-  const win = window.open(url, '_blank', 'noopener,noreferrer');
-  if (!win) {
-    setStatus('Tab baru diblokir browser. Izinkan pop-up untuk GitHub Pages lalu coba lagi.', 'error');
-    return;
-  }
-  setStatus('Kamera dibuka pada tab baru. Setelah memilih foto, kembali ke BISAMA.', 'success');
-}
 
-startCameraBtn.addEventListener('click', startCamera);
-captureBtn.addEventListener('click', capturePhoto);
-retakeBtn.addEventListener('click', retakePhoto);
-usePhotoBtn.addEventListener('click', usePhoto);
-switchCameraBtn.addEventListener('click', switchCamera);
-openStandaloneBtn.addEventListener('click', openStandaloneCamera);
-window.addEventListener('beforeunload', stopCamera);
+/* =========================================================
+   EVENT
+========================================================= */
 
-if (window.top !== window.self) {
-  setStatus('Halaman kamera siap. Klik “Aktifkan Kamera” untuk meminta izin.', '');
-}
+startCameraBtn.addEventListener(
+  "click",
+  startCamera
+);
 
-isSupported();
+captureBtn.addEventListener(
+  "click",
+  capturePhoto
+);
+
+retakeBtn.addEventListener(
+  "click",
+  retakePhoto
+);
+
+usePhotoBtn.addEventListener(
+  "click",
+  usePhoto
+);
+
+switchCameraBtn.addEventListener(
+  "click",
+  switchCamera
+);
+
+
+/* =========================================================
+   SAAT HALAMAN DITUTUP
+========================================================= */
+
+window.addEventListener(
+  "beforeunload",
+  stopCamera
+);
+
+
+/* =========================================================
+   AUTO CHECK
+========================================================= */
+
+checkCameraSupport();
+
 </script>
+
 </body>
 </html>
