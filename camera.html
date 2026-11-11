@@ -579,7 +579,18 @@ function usePhoto() {
    */
 
   const receiverWindow = window.opener || window.parent;
-  const targetOrigin = "https://script.google.com";
+
+  // Apps Script Web App dapat menyajikan halaman dengan origin
+  // script.googleusercontent.com meskipun URL yang terlihat adalah
+  // script.google.com. Karena itu jangan mengunci targetOrigin ke
+  // script.google.com. Keamanan tetap dijaga oleh listener di index.html
+  // yang hanya menerima event dari origin GitHub Pages BISAMA.
+  let targetOrigin = "*";
+  try {
+    if (document.referrer) {
+      targetOrigin = new URL(document.referrer).origin;
+    }
+  } catch (e) {}
 
   receiverWindow.postMessage({
     type: "BISAMA_CAMERA_PHOTO",
